@@ -22,12 +22,15 @@ def print_dataframe(dataframe, title, lblxaxis, lblyaxis, legend):
     x = pd.to_datetime(df.iloc[:, 0], unit='s') + pd.Timedelta('01:00:00')
     y = df.iloc[:, 1]
     fig, ax = plt.subplots(figsize=(12, 12))
-    ax.plot(x, y, 'r')
+    ax.plot(x, y, color='brown', zorder=2)
     plt.title(title, fontdict=gdef.font_title, pad=20)
     plt.ylabel(lblyaxis, fontdict=gdef.font_label)
     plt.xlabel(lblxaxis, fontdict=gdef.font_label)
-    plt.legend([legend])
-    plt.grid()
+    plt.xticks(fontsize="xx-large")
+    plt.yticks(fontsize="xx-large")
+    plt.ylim(0, 20000)
+    plt.legend([legend], fontsize="xx-large")
+    plt.grid(zorder=0)
 
     plt.show()
 
@@ -69,7 +72,7 @@ def display_buzzword(buzzword):
     daily_buzzwords['mentions'] = daily_buzzwords['mentions'].interpolate()
     return daily_buzzwords
 
-
+# -------------------------------counting all words in the titles------------------------------------------------------
 """
 def count_all_words():
 
@@ -114,12 +117,48 @@ def count_all_words():
 df = count_all_words()
 df.to_csv('allwords.csv', index=False)
 """
-print(df)
 
+# -------------------------------working with the title word count-----------------------------------------------------
+"""
+dirname = os.path.dirname(os.path.dirname(__file__))
+# compose the filepath to the csv file
+filepath = os.path.join(dirname, "GetData/datasets/CSVfiles/all_words_count.csv")
+# separation by semicolon is really important
+df = pd.read_csv(filepath, sep=',', names=['word', 'count'])
+df = df.sort_values(by='count', ascending=False).reset_index(drop=True)
+df = df.drop([0])
+
+# for showing the top 15 words
+# df2 = df.iloc[0:15, :].sort_values(by='count', ascending=True)
+
+# for showing the 10 most mentioned- short squeeze related words
+# the rows were selected by hand on basis of what i found interesting
+df2 = pd.DataFrame(columns=['word', 'count'])
+df2 = df2.append(df.loc[3, :])
+df2 = df2.append(df.loc[14, :])
+df2 = df2.append(df.loc[15, :])
+df2 = df2.append(df.loc[19, :])
+df2 = df2.append(df.loc[22, :])
+df2 = df2.append(df.loc[25, :])
+df2 = df2.append(df.loc[29, :])
+df2 = df2.append(df.loc[50, :])
+df2 = df2.append(df.loc[55, :])
+df2 = df2.sort_values(by='count', ascending=True)
+
+fig, ax = plt.subplots()
+ax.barh(df2.iloc[:, 0], df2.iloc[:, 1], align='center', color='firebrick', zorder=3)
+plt.grid(zorder=0)
+plt.xlabel('Number of mentions', fontdict=gdef.font_label, labelpad=10)
+plt.title('Most mentioned short squeeze related words in post titles', fontdict=gdef.font_title, pad=20)
+plt.xticks(fontsize='xx-large')
+plt.yticks(fontsize='xx-large')
+
+plt.show()
+"""
 # -------------------------Printing the graph of a single stock------------------------------------
-"""
-print_dataframe(display_buzzword("BB"), "Mentions of 'BB' per day", "Date", "Mentions", "BB")
-"""
+
+print_dataframe(display_buzzword("robinhood"), "Mentions of 'Robinhood' per day", "Date", "Mentions", "Robinhood mentions")
+
 
 # -------------------------Printing graph of multiple buzzwords------------------------------------
 """
