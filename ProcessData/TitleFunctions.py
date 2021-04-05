@@ -22,13 +22,13 @@ def print_dataframe(dataframe, title, lblxaxis, lblyaxis, legend):
     x = pd.to_datetime(df.iloc[:, 0], unit='s') + pd.Timedelta('01:00:00')
     y = df.iloc[:, 1]
     fig, ax = plt.subplots(figsize=(12, 12))
-    ax.plot(x, y, color='brown', zorder=2)
+    ax.bar(x, y, color='brown', zorder=2)
     plt.title(title, fontdict=gdef.font_title, pad=20)
     plt.ylabel(lblyaxis, fontdict=gdef.font_label)
     plt.xlabel(lblxaxis, fontdict=gdef.font_label)
     plt.xticks(fontsize="xx-large")
     plt.yticks(fontsize="xx-large")
-    plt.ylim(0, 20000)
+    #plt.ylim(0, 20000)
     plt.legend([legend], fontsize="xx-large")
     plt.grid(zorder=0)
 
@@ -56,8 +56,8 @@ def count_buzzwords(start, end, buzzword):
 
     return counter
 
-def display_buzzword(buzzword):
-    starttime = gdef.firsttimstamp
+def display_buzzword(buzzword, start):
+    starttime = start
     daily_buzzwords = pd.DataFrame(columns=['day', 'mentions'])
 
     while datetime.fromtimestamp(starttime) < gdef.endtime:
@@ -157,7 +157,7 @@ plt.show()
 """
 # -------------------------Printing the graph of a single stock------------------------------------
 
-print_dataframe(display_buzzword("robinhood"), "Mentions of 'Robinhood' per day", "Date", "Mentions", "Robinhood mentions")
+#print_dataframe(display_buzzword("gme"), "Mentions of 'GME' per day", "Date", "Mentions", "GME mentions")
 
 
 # -------------------------Printing graph of multiple buzzwords------------------------------------
