@@ -56,11 +56,11 @@ def count_buzzwords(start, end, buzzword):
 
     return counter
 
-def display_buzzword(buzzword, start):
+def display_buzzword(buzzword, start, end):
     starttime = start
     daily_buzzwords = pd.DataFrame(columns=['day', 'mentions'])
 
-    while datetime.fromtimestamp(starttime) < gdef.endtime:
+    while datetime.fromtimestamp(starttime) < datetime.fromtimestamp(end):
         count = count_buzzwords(starttime, starttime+gdef.timeticksperday-1, buzzword)
         daily_buzzwords.loc[len(daily_buzzwords.day)] = [starttime, count]
         #print(datetime.fromtimestamp(starttime))
