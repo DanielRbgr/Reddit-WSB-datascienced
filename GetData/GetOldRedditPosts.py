@@ -5,8 +5,8 @@ api = PushshiftAPI()
 
 datafile = open("datasets/datadump.txt", "w", encoding="utf-8")
 
-start_time = int(dt.datetime(2021, 3, 1).timestamp())
-end_time = int(dt.datetime(2021, 3, 8).timestamp())
+start_time = int(dt.datetime(2021, 3, 17).timestamp())
+end_time = int(dt.datetime(2021, 3, 31).timestamp())
 
 submissions = api.search_submissions(after=start_time,
                                      before=end_time,
