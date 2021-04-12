@@ -1,3 +1,11 @@
+"""
+This file includes all functions necessary evaluate the post titles
+This includes:
+    - loading the posts
+    - search a certain timeframe for a buzzword (any timeframe)
+    - display the mentions of buzzwords over a certain timeframe (in 1d steps)
+    - various code blocks to evaluate and show plots
+"""
 import os, TextFunctions, MemberData
 import numpy as np
 import pandas as pd
@@ -81,7 +89,7 @@ def count_all_words():
     df_allwords = pd.DataFrame(columns=['word', 'count'])
     allwords_dic = {}
 
-    # this code wroks aswell, but it needs WAY WAY longer than with the dictionarys (16h vs 5min)
+    # this code works as well, but it needs WAY WAY longer than with the dictionarys (16h vs 5min)
     # thus, it's here just for research/whatever reasons
     #for title in df['title']:
     #    title =  TextFunctions.remove_emojys(title).lower()
@@ -97,7 +105,7 @@ def count_all_words():
     #            df_allwords.loc[len(df_allwords)] = [word, 1]
 
     #return df_allwords
-    
+
 
     for title in df['title']:
         title = TextFunctions.remove_emojys(title).lower()
@@ -162,29 +170,32 @@ plt.show()
 
 # -------------------------Printing graph of multiple buzzwords------------------------------------
 """
-df_gme = display_buzzword("GME")
-df_bb = display_buzzword("AMC")
-df_amc = display_buzzword("BB")
+df_gme = display_buzzword("GME", gdef.firsttimstamp, gdef.lasttimestamp)
+df_amc = display_buzzword("AMC", gdef.firsttimstamp, gdef.lasttimestamp)
+df_nok = display_buzzword("NOK", gdef.firsttimstamp, gdef.lasttimestamp)
+df_bb = display_buzzword("BB", gdef.firsttimstamp, gdef.lasttimestamp)
 
-# df.plot(x='date',y='members',kind='line')
-df = df_gme
-x = pd.to_datetime(df.iloc[:, 0], unit='s') + pd.Timedelta('01:00:00')
-y = list(df.iloc[:, 1])
-y2 = list(df_bb.iloc[:, 1])
+x = pd.to_datetime(df_gme.iloc[:, 0], unit='s') + pd.Timedelta('01:00:00')
+y = list(df_gme.iloc[:, 1])
+y2 = list(df_amc.iloc[:, 1])
 y2 = np.add(y2, y)
-y3 = list(df_amc.iloc[:, 1])
+y3 = list(df_nok.iloc[:, 1])
 y3 = np.add(y3, y2)
+y4 = list(df_bb.iloc[:, 1])
+y4 = np.add(y4, y3)
 fig, axs = plt.subplots(figsize=(12, 12))
-axs.bar(x, y,   color='#EE2622', label='GME', zorder=3)
-axs.bar(x, y2,  color='g', label='AMC', zorder=2)
-axs.bar(x, y3, color='b', label='BB', zorder=1)
+axs.bar(x, y,   color='#EE2622', label='GME', zorder=6)
+axs.bar(x, y2,  color='seagreen', label='AMC', zorder=5)
+axs.bar(x, y3, color='midnightblue', label='NOK', zorder=4)
+axs.bar(x, y4, color='dimgray', label='BB', zorder=3)
 
-plt.title("Titel", fontdict=gdef.font_title, pad=20)
-plt.ylabel("YLabel", fontdict=gdef.font_label, labelpad=10)
-plt.xlabel("XLabel", fontdict=gdef.font_label, labelpad=10)
-plt.legend()
-plt.grid()
+plt.title("Distribution of top 4 mentioned stocks", fontdict=gdef.font_title, pad=20)
+plt.ylabel("Mentions", fontdict=gdef.font_label, labelpad=10)
+plt.xlabel("Date", fontdict=gdef.font_label, labelpad=10)
+plt.legend(loc=2, fontsize='xx-large')
+plt.grid(zorder=0)
+plt.xticks(fontsize='xx-large')
+plt.yticks(fontsize='xx-large')
 
 plt.show()
 """
-
