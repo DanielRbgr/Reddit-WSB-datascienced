@@ -1,3 +1,8 @@
+"""
+This file covers all functions related to the stock price
+This includes:
+    - printing a chart with buzzword count and stock price
+"""
 from GetData.StockData  import GetStockData as gsd
 import ProcessData.TitleFunctions as tf
 import GlobalDefinitions as gdef
@@ -47,7 +52,7 @@ def print_buzzword_stock_chart(buzzword, stock, start, end):
     plt.show()
 
 # using the unix timestamp 1609455600 (1.1.2021 00:00:00), as nothing before January is of interest
-print_buzzword_stock_chart("GME", "GME", 1609455600, gdef.endtime)
+print_buzzword_stock_chart("AMC", "AMC", 1609455600, gdef.endtime)
 
 
 
