@@ -1,3 +1,11 @@
+"""
+This file covers all functions related to the sentiment of Reddit posts
+This includes:
+    - getting a sentiment score for a single sentence
+    - analyze the sentiment score for a timeframe
+    - load sentiment score from a csv
+    - exp_sentiment: access the sentiment scores of a certain file from another file system
+"""
 from textblob import TextBlob
 import ProcessData.TitleFunctions as tf
 import pandas as pd
@@ -10,12 +18,8 @@ from datetime import datetime
 
 orig_df = tf.load_csv_data()
 starttime = gdef.firsttimstamp
-endtime = gdef.lasttimestamp
+endtime = 1617141600
 
-
-def get_single_sentiment(sentence):
-
-    return TextBlob(sentence).sentiment.polarity
 
 def get_sentiment(start, end, keyword):
 
@@ -53,7 +57,7 @@ def load_sentiment():
     # get directory of the Reddit_GME_Project folder
     dirname = os.path.dirname(os.path.dirname(__file__))
     # compose the filepath to the csv file
-    filepath = os.path.join(dirname, "GetData/SentimentData/GME_Sentiment.csv")
+    filepath = os.path.join(dirname, "GetData/SentimentData/AMC_Sentiment.csv")
     df_sentiment = pd.read_csv(filepath, usecols=[1, 2, 3], header=0)
     df_sentiment['polarity_tot'].replace(0.0, np.nan, inplace=True)
     df_sentiment['polarity_tot'] = df_sentiment['polarity_tot'].interpolate()
@@ -96,7 +100,21 @@ def load_sentiment():
     ax1.patch.set_visible(False)
     plt.show()
 
+def exp_sentiment():
+
+    # get directory of the Reddit_GME_Project folder
+    dirname = os.path.dirname(os.path.dirname(__file__))
+    # compose the filepath to the csv file
+    filepath = os.path.join(dirname, "GetData/SentimentData/GME_Sentiment.csv")
+    df_sentiment = pd.read_csv(filepath, usecols=[1, 2, 3], header=0)
+    df_sentiment['polarity_tot'].replace(0.0, np.nan, inplace=True)
+    df_sentiment['polarity_tot'] = df_sentiment['polarity_tot'].interpolate()
+    df_sentiment['polarity_mean'] = df_sentiment['polarity_mean'].interpolate()
+    df_sentiment.date = df_sentiment.date.astype('int32')
+    df_sentiment.date = pd.to_datetime(df_sentiment.date, unit='s') + pd.Timedelta('01:00:00')
+
+    return df_sentiment
 
 load_sentiment()
-# df_sentiment = analyze_sentiment(starttime, endtime, "BB")
-# df_sentiment.to_csv("tot_Sentiment.csv")
+#df_sentiment = analyze_sentiment(starttime, endtime, "AMC")
+#df_sentiment.to_csv("amc_Sentiment.csv")

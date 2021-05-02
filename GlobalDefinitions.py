@@ -1,3 +1,6 @@
+"""
+Includes all global definitions
+"""
 from datetime import datetime
 
 firsttimstamp = 1604185200
