@@ -3,15 +3,15 @@ import yfinance as yf
 def GetStockData(ticker, per_start, per_end):
 
     #define the ticker symbol
-    tickerSymbol = ticker
+    ticker_symbol = ticker
 
     #get data on this ticker
-    tickerData = yf.Ticker(tickerSymbol)
+    ticker_data = yf.Ticker(ticker_symbol)
 
     #get the historical prices for this ticker
-    tickerDf = tickerData.history(period='1d', start=per_start, end=per_end)
+    ticker_df = ticker_data.history(period='1d', start=per_start, end=per_end)
 
     #see your data
-    # print(tickerDf)
-    return tickerDf
+    # print(ticker_df)
+    return ticker_df
 

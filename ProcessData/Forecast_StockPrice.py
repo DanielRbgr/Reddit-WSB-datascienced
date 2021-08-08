@@ -17,7 +17,7 @@ from tensorflow.keras.layers import Dense, Dropout, LSTM
 
 # define important dates
 starttime = gdef.firsttimstamp
-endtime = 1617141592
+endtime = gdef.lasttimestamp
 # date where train data end (including) and test data starts
 testborder = datetime.date(2021, 2, 28)
 # ---------------------------------------------- Generate Data ---------------------------------------------------------

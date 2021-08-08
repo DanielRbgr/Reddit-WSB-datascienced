@@ -16,13 +16,13 @@ import TextFunctions
 import GlobalDefinitions as gdef
 from datetime import datetime
 
-orig_df = tf.load_csv_data()
 starttime = gdef.firsttimstamp
-endtime = 1617141600
+endtime = gdef.lasttimestamp
 
 
 def get_sentiment(start, end, keyword):
 
+    orig_df = tf.load_csv_data()
     booldf = ((orig_df['utc'] >= start) & (orig_df['utc'] <= end))
     # print("Number of Post in this period of time: " + str(booldf.sum()))
     df = orig_df[booldf]
@@ -115,6 +115,7 @@ def exp_sentiment():
 
     return df_sentiment
 
-load_sentiment()
-#df_sentiment = analyze_sentiment(starttime, endtime, "AMC")
-#df_sentiment.to_csv("amc_Sentiment.csv")
+if __name__ == '__main__':
+    load_sentiment()
+    #df_sentiment = analyze_sentiment(starttime, endtime, "AMC")
+    #df_sentiment.to_csv("amc_Sentiment.csv")
