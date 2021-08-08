@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 import GlobalDefinitions as gdef
 import re
 
+# ----------------------------------------------basic functions--------------------------------------------------------
 def load_csv_data():
     # get directory of the Reddit_GME_Project folder
     dirname = os.path.dirname(os.path.dirname(__file__))
@@ -42,9 +43,9 @@ def print_dataframe(dataframe, title, lblxaxis, lblyaxis, legend):
 
     plt.show()
 
-orig_df = load_csv_data()
-
 def count_buzzwords(start, end, buzzword):
+
+    orig_df = load_csv_data()
 
     #print("Full dataframe shape: " + str(df.shape))
 
@@ -81,10 +82,9 @@ def display_buzzword(buzzword, start, end):
     return daily_buzzwords
 
 # -------------------------------counting all words in the titles------------------------------------------------------
-"""
 def count_all_words():
 
-    df = orig_df
+    df = load_csv_data()
 
     df_allwords = pd.DataFrame(columns=['word', 'count'])
     allwords_dic = {}
@@ -122,80 +122,77 @@ def count_all_words():
 
     return df_allwords
 
-df = count_all_words()
-df.to_csv('allwords.csv', index=False)
-"""
-
 # -------------------------------working with the title word count-----------------------------------------------------
-"""
-dirname = os.path.dirname(os.path.dirname(__file__))
-# compose the filepath to the csv file
-filepath = os.path.join(dirname, "GetData/datasets/CSVfiles/all_words_count.csv")
-# separation by semicolon is really important
-df = pd.read_csv(filepath, sep=',', names=['word', 'count'])
-df = df.sort_values(by='count', ascending=False).reset_index(drop=True)
-df = df.drop([0])
+def plot_top_ten_words():
+    dirname = os.path.dirname(os.path.dirname(__file__))
+    # compose the filepath to the csv file
+    filepath = os.path.join(dirname, "GetData/datasets/CSVfiles/all_words_count.csv")
+    # separation by semicolon is really important
+    df = pd.read_csv(filepath, sep=',', names=['word', 'count'])
+    df = df.sort_values(by='count', ascending=False).reset_index(drop=True)
+    df = df.drop([0])
 
-# for showing the top 15 words
-# df2 = df.iloc[0:15, :].sort_values(by='count', ascending=True)
+    # for showing the top 15 words
+    # df2 = df.iloc[0:15, :].sort_values(by='count', ascending=True)
 
-# for showing the 10 most mentioned- short squeeze related words
-# the rows were selected by hand on basis of what i found interesting
-df2 = pd.DataFrame(columns=['word', 'count'])
-df2 = df2.append(df.loc[3, :])
-df2 = df2.append(df.loc[14, :])
-df2 = df2.append(df.loc[15, :])
-df2 = df2.append(df.loc[19, :])
-df2 = df2.append(df.loc[22, :])
-df2 = df2.append(df.loc[25, :])
-df2 = df2.append(df.loc[29, :])
-df2 = df2.append(df.loc[50, :])
-df2 = df2.append(df.loc[55, :])
-df2 = df2.sort_values(by='count', ascending=True)
+    # for showing the 10 most mentioned- short squeeze related words
+    # the rows were selected by hand on basis of what i found interesting
+    df2 = pd.DataFrame(columns=['word', 'count'])
+    df2 = df2.append(df.loc[3, :])
+    df2 = df2.append(df.loc[14, :])
+    df2 = df2.append(df.loc[15, :])
+    df2 = df2.append(df.loc[19, :])
+    df2 = df2.append(df.loc[22, :])
+    df2 = df2.append(df.loc[25, :])
+    df2 = df2.append(df.loc[29, :])
+    df2 = df2.append(df.loc[50, :])
+    df2 = df2.append(df.loc[55, :])
+    df2 = df2.sort_values(by='count', ascending=True)
 
-fig, ax = plt.subplots()
-ax.barh(df2.iloc[:, 0], df2.iloc[:, 1], align='center', color='firebrick', zorder=3)
-plt.grid(zorder=0)
-plt.xlabel('Number of mentions', fontdict=gdef.font_label, labelpad=10)
-plt.title('Most mentioned short squeeze related words in post titles', fontdict=gdef.font_title, pad=20)
-plt.xticks(fontsize='xx-large')
-plt.yticks(fontsize='xx-large')
+    fig, ax = plt.subplots()
+    ax.barh(df2.iloc[:, 0], df2.iloc[:, 1], align='center', color='firebrick', zorder=3)
+    plt.grid(zorder=0)
+    plt.xlabel('Number of mentions', fontdict=gdef.font_label, labelpad=10)
+    plt.title('Most mentioned short squeeze related words in post titles', fontdict=gdef.font_title, pad=20)
+    plt.xticks(fontsize='xx-large')
+    plt.yticks(fontsize='xx-large')
 
-plt.show()
-"""
-# -------------------------Printing the graph of a single stock------------------------------------
-
-#print_dataframe(display_buzzword("gme"), "Mentions of 'GME' per day", "Date", "Mentions", "GME mentions")
+    plt.show()
 
 
-# -------------------------Printing graph of multiple buzzwords------------------------------------
-"""
-df_gme = display_buzzword("GME", gdef.firsttimstamp, gdef.lasttimestamp)
-df_amc = display_buzzword("AMC", gdef.firsttimstamp, gdef.lasttimestamp)
-df_nok = display_buzzword("NOK", gdef.firsttimstamp, gdef.lasttimestamp)
-df_bb = display_buzzword("BB", gdef.firsttimstamp, gdef.lasttimestamp)
+# -------------------------------Printing graph of multiple buzzwords--------------------------------------------------
+def plot_stockmentions_per_day():
+    df_gme = display_buzzword("GME", gdef.firsttimstamp, gdef.lasttimestamp)
+    df_amc = display_buzzword("AMC", gdef.firsttimstamp, gdef.lasttimestamp)
+    df_nok = display_buzzword("NOK", gdef.firsttimstamp, gdef.lasttimestamp)
+    df_bb = display_buzzword("BB", gdef.firsttimstamp, gdef.lasttimestamp)
 
-x = pd.to_datetime(df_gme.iloc[:, 0], unit='s') + pd.Timedelta('01:00:00')
-y = list(df_gme.iloc[:, 1])
-y2 = list(df_amc.iloc[:, 1])
-y2 = np.add(y2, y)
-y3 = list(df_nok.iloc[:, 1])
-y3 = np.add(y3, y2)
-y4 = list(df_bb.iloc[:, 1])
-y4 = np.add(y4, y3)
-fig, axs = plt.subplots(figsize=(12, 12))
-axs.bar(x, y,   color='#EE2622', label='GME', zorder=6)
-axs.bar(x, y2,  color='seagreen', label='AMC', zorder=5)
-axs.bar(x, y3, color='midnightblue', label='NOK', zorder=4)
-axs.bar(x, y4, color='dimgray', label='BB', zorder=3)
+    x = pd.to_datetime(df_gme.iloc[:, 0], unit='s') + pd.Timedelta('01:00:00')
+    y = list(df_gme.iloc[:, 1])
+    y2 = list(df_amc.iloc[:, 1])
+    y2 = np.add(y2, y)
+    y3 = list(df_nok.iloc[:, 1])
+    y3 = np.add(y3, y2)
+    y4 = list(df_bb.iloc[:, 1])
+    y4 = np.add(y4, y3)
+    fig, axs = plt.subplots(figsize=(12, 12))
+    axs.bar(x, y,   color='#EE2622', label='GME', zorder=6)
+    axs.bar(x, y2,  color='seagreen', label='AMC', zorder=5)
+    axs.bar(x, y3, color='midnightblue', label='NOK', zorder=4)
+    axs.bar(x, y4, color='dimgray', label='BB', zorder=3)
 
-plt.title("Distribution of top 4 mentioned stocks", fontdict=gdef.font_title, pad=20)
-plt.ylabel("Mentions", fontdict=gdef.font_label, labelpad=10)
-plt.xlabel("Date", fontdict=gdef.font_label, labelpad=10)
-plt.legend(loc=2, fontsize='xx-large')
-plt.grid(zorder=0)
-plt.xticks(fontsize='xx-large')
-plt.yticks(fontsize='xx-large')
+    plt.title("Distribution of top 4 mentioned stocks", fontdict=gdef.font_title, pad=20)
+    plt.ylabel("Mentions", fontdict=gdef.font_label, labelpad=10)
+    plt.xlabel("Date", fontdict=gdef.font_label, labelpad=10)
+    plt.legend(loc=2, fontsize='xx-large')
+    plt.grid(zorder=0)
+    plt.xticks(fontsize='xx-large')
+    plt.yticks(fontsize='xx-large')
 
-plt.show()
-"""
+    plt.show()
+
+if __name__ == '__main__':
+    print_dataframe(display_buzzword("gme", gdef.firsttimstamp, 1617141600), "Mentions of 'GME' per day",
+                    "Date", "Mentions", "GME mentions")
+    # df = count_all_words()
+    # df.to_csv('allwords.csv', index=False)
